@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>학생 점수 등록</title>
+</head>
+<body>
+<form action="{% url 'student-register' %}" method="get" name="student-register-form">
+    <input type="text" placeholder="학생 번호" name="student_id">
+    <input type="text" placeholder="국어 점수" name="korean_score">
+    <input type="text" placeholder="영어 점수" name="english_score">
+    <input type="text" placeholder="수학 점수" name="math_score"> 
+    <button>제출</button>
+</form>
+<button>돌아가기</button>
+</body>
+</html>

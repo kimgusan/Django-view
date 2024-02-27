@@ -35,6 +35,7 @@ class MemberLoginView(View):
             'member_password': data['member-password']
         }
 
+        # exists()를 사용하기 위해서 QuesySet 객체로 조회
         member = Member.objects.filter(**data)
         url = 'member:login'
         if member.exists():

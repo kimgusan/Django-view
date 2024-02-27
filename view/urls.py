@@ -19,10 +19,24 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from main.views import MainView
-
+from view.views import StudentRegisterView, StudentResultView, StudentRegisterFormView, MemberRegisterFormView, MemberRegisterView, MemberResultView, UserRegisterFormView, UserRegisterView, UserResultView, NumberInputFormView, NumberInputView
+from view.views import NumberResultView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
+    path('post/', include('post.urls')),
+    path('student/register/form/', StudentRegisterFormView.as_view(), name='student-register-form'),
+    path('student/register/', StudentRegisterView.as_view(), name='student-register'),
+    path('student/result/', StudentResultView.as_view(), name='student-result'),
+    path('member/register/form/', MemberRegisterFormView.as_view(), name='member-register-form'),
+    path('member/register/', MemberRegisterView.as_view(), name='member-register'),
+    path('member/result/', MemberResultView.as_view(), name='member-result'),
+    path('user/register/form/', UserRegisterFormView.as_view(), name='user-register-form'),
+    path('user/register/', UserRegisterView.as_view(), name='user-register'),
+    path('user/result/', UserResultView.as_view(), name='user-result'),
+    path('number/input/form/', NumberInputFormView.as_view(), name='number-input-form'),
+    path('number/input/', NumberInputView.as_view(), name='number-input'),
+    path('number/result/', NumberResultView.as_view(), name='number-result'),
     path('', MainView.as_view())
 ]
