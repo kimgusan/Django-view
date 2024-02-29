@@ -15,17 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.conf import settings
 
 from main.views import MainView
-from view.views import StudentRegisterView, StudentResultView, StudentRegisterFormView, MemberRegisterFormView, MemberRegisterView, MemberResultView, UserRegisterFormView, UserRegisterView, UserResultView, NumberInputFormView, NumberInputView
 from view.views import NumberResultView
+
+from main.views import MainView
+from view.views import StudentRegisterView, StudentResultView, StudentRegisterFormView, MemberRegisterFormView, \
+    MemberRegisterView, MemberResultView, ProductDetailAPI, ProductDetailView ,UserRegisterFormView, UserRegisterView, UserResultView, NumberInputFormView,NumberInputView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
     path('post/', include('post.urls')),
+    path('products/', include('product.urls')),
     path('student/register/form/', StudentRegisterFormView.as_view(), name='student-register-form'),
     path('student/register/', StudentRegisterView.as_view(), name='student-register'),
     path('student/result/', StudentResultView.as_view(), name='student-result'),
@@ -38,5 +45,10 @@ urlpatterns = [
     path('number/input/form/', NumberInputFormView.as_view(), name='number-input-form'),
     path('number/input/', NumberInputView.as_view(), name='number-input'),
     path('number/result/', NumberResultView.as_view(), name='number-result'),
+    # path('products/<int:product_id>/', ProductDetailAPI.as_view(), name='list'),
+    # path('products/detail/', ProductDetailView.as_view(), name='list'),
     path('', MainView.as_view())
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

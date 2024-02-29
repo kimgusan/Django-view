@@ -21,4 +21,12 @@ class Post(models.Model):
 
     # 게시글 상세보기
     def get_absolute_url(self):
-        return f'/post/detail/{self.id}'
+        return f'/post/detail/?id={self.id}'
+
+class PostFile(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, null=False, blank=False)
+    # image path
+    path = models.ImageField(upload_to='post/%Y/%m/%d', null=False, blank=False)
+
+    class Meta:
+        db_table = 'tbl_post_file'

@@ -1,9 +1,12 @@
 from django.db import transaction
+from django.db.models import F
 from django.shortcuts import render, redirect
 from django.views import View
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from member.models import Member
-from post.models import Post
+from post.models import Post, PostFile
 
 
 class PostWriteView(View):
@@ -13,6 +16,10 @@ class PostWriteView(View):
     @transaction.atomic
     def post(self, request):
         data = request.POST
+        # input 태그 하나 당 파일 1개 일 때
+        file = request.FILES
+        # input 태그 하나에 여러 파일일 때 (multiple), getlist('{input태그 name 값}')
+        # files = request.FILES.getlist('upload-file')
 
         member = Member(**request.session['member'])
 
@@ -24,20 +31,38 @@ class PostWriteView(View):
 
         post = Post.objects.create(**data)
 
+        #input 태그의 name 값이 key 이다.
+        for key in file:
+            PostFile.objects.create(post=post, path=file[key])
+
         return redirect(post.get_absolute_url())
 
 class PostDetailView(View):
-    def get(self, request, post_id):
-        post = Post.objects.get(id=post_id)
+    def get(self, request):
+
+        post = Post.objects.get(id=request.GET['id'])
 
         post.post_view_count += 1
         post.save(update_fields=['post_view_count'])
 
         context = {
-            'post': post
+            'post': post,
+            'post_files': list(post.postfile_set.all())
         }
-
         return render(request, 'post/detail.html', context)
+
+    # 위에 강사님 코드는 쿼리 스트링으로 id 값을 가져오기 때문에 별도로 post_id 값을 전달받지 않았음
+    # def get(self, request, post_id):
+    #     post = Post.objects.get(id=post_id)
+    #
+    #     post.post_view_count += 1
+    #     post.save(update_fields=['post_view_count'])
+    #
+    #     context = {
+    #         'post': post
+    #     }
+    #
+    #     return render(request, 'post/detail.html', context)
 
 
 class PostUpdateView(View):
@@ -86,14 +111,31 @@ class PostDeleteView(View):
 
 class PostListView(View):
     def get(self, request):
-        # 페이징 처리
+        return render(request, 'post/list.html')
+
+class PostListAPI(APIView):
+    # 페이징 처리
+    def get(self, request, page):
         row_count = 5
-        page = request.GET.get('page')
-        if page is None:
-            page = 1
 
-        offset = (page -1) * row_count
-        limit= page * row_count
+        offset = (page - 1) * row_count
+        limit = page * row_count
+        columns = [
+            'id',
+            'post_title',
+            'post_content',
+            'post_view_count',
+            'member_name'
+        ]
+        posts = Post.enabled_objects.annotate(member_name=F('member__member_name')).values(*columns)[offset:limit]
 
-        posts = Post.enabled_objects.all()[offset:limit]
-        return render(request, 'post/list.html',{'posts': posts})
+        has_next = Post.enabled_objects.filter()[limit:limit + 1].exists()
+
+        post_info = {
+            'posts': posts,
+            'hasNext': has_next
+        }
+
+        return Response(post_info)
+
+

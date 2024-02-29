@@ -1,0 +1,16 @@
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+tr, td {
+    border: 1px solid black;
+}
+
+header > div {
+    display:flex;
+    justify-content: space-between;
+}

@@ -22,11 +22,12 @@
         </div>
     </div>
 </header>
-<form action="{% url 'post:write' %}" method="post" name="write-form">
+<form action="{% url 'post:write' %}" method="post" name="write-form" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="text" name="post-title" placeholder="게시글 제목">
     <p>게시글 내용</p>
     <textarea name="post-content" cols="30" rows="10" style="resize: none"></textarea>
+    <input type="file" name="update-file">
     <button>완료</button>
 </form>
 </body>
