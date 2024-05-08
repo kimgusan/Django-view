@@ -19,7 +19,7 @@ const showList = (post_info) => {
     posts.forEach((post) => {
         table.innerHTML += `
             <tr>
-                <td>${post.id}</td>
+                <td>${post.id}</td> 
                 <td><a href="/post/detail/?id=${post.id}">${post.post_title}</a></td>
                 <td>${post.post_view_count}</td>
                 <td>${post.member_name}</td>
